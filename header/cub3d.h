@@ -6,18 +6,43 @@
 /*   By: donghyki <42.4.donghyki@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 01:40:46 by donghyki          #+#    #+#             */
-/*   Updated: 2022/06/06 02:55:26 by donghyki         ###   ########.fr       */
+/*   Updated: 2022/06/09 09:29:08 by donghyki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# define GL_SILENCE_DEPRECATION
+# include "../libft/libft.h"
+# include "../minilibx_opengl_20191021/mlx.h"
 # include <stdio.h>
 # include <unistd.h> 
 # include <stdlib.h>
 # include <math.h>
 # include <fcntl.h>
+
+# define NORTH				0
+# define SOUTH				1
+# define EAST				2
+# define WEST				3
+# define FLOOR				5
+# define CEILING			6
+# define MAP				7
+# define EMPTY				'0'
+# define WALL				'1'
+# define X_EVENT_KEY_PRESS	2
+# define X_EVENT_KEY_EXIT	17
+# define TEX_WIDTH			64
+# define TEX_HEIGHT 		64
+
+# define KEY_A 0
+# define KEY_S 1
+# define KEY_D 2
+# define KEY_W 13
+# define KEY_LEFT	123
+# define KEY_RIGHT	124
+# define KEY_ESC	53
 
 typedef struct s_img
 {
@@ -29,32 +54,6 @@ typedef struct s_img
 	int				width;
 	int				height;
 }					t_img;
-
-typedef struct s_sprite
-{
-	double			x;
-	double			y;
-	double			distance;
-}					t_sprite;
-
-typedef struct s_sprite_ray
-{
-	double			x;
-	double			y;
-	double			inv_det;
-	double			transform_x;
-	double			transform_y;
-	int				screen_x;
-	int				v_move_screen;
-	int				height;
-	int				width;
-	int				draw_start_x;
-	int				draw_start_y;
-	int				draw_end_x;
-	int				draw_end_y;
-	int				tex_x;
-	int				tex_y;
-}					t_sprite_ray;
 
 typedef struct s_ray
 {
@@ -99,32 +98,50 @@ typedef struct s_element
 {
 	int				render_x;
 	int				render_y;
-	char			*xpm_path[5];
-	int				tex[5][TEX_HEIGHT * TEX_WIDTH];
 	int				floor;
 	int				ceiling;
+	char			*xpm_path[4];
+	int				tex[4][TEX_HEIGHT * TEX_WIDTH];
 }					t_element;
 
-typedef struct s_cub
+typedef struct s_info
 {
 	void			*mlx;
 	void			*win;
 	int				fd;
-	t_element		ele;
 	int				width;
 	int				height;
-	t_list			*map_lines;
 	char			**map;
 	int				map_width;
 	int				map_height;
-	t_player		player;
 	int				**buf;
 	double			*z_buf;
+	t_list			*map_lines;
+	t_player		player;
+	t_element		ele;
 	t_img			img;
-	int				num_sprite;
-	t_sprite		*sprite;
 	t_ray			ray;
-	t_sprite_ray	s_ray;
-}					t_cub;
+}					t_info;
+
+void				init_cub(t_info *cub, char *arg);
+int					exit_game(void);
+void				read_cub_element_lines(t_info *cub);
+void				read_cub_map_lines(t_info *cub);
+int					raycast(t_info *cub);
+void				valid_element_lines(char *word, int cnt_word);
+void				valid_cub(t_info *cub);
+void				set_cub(t_info *cub);
+
+void				start_game(t_info *cub);
+void				rotate_player(t_player *player, double rot_speed);
+
+void				init_ray(t_info *cub, t_player *p, t_ray *ray, int x);
+void				calc_step_sidedist(t_player *p, t_ray *ray);
+void				perform_dda(t_info *cub, t_ray *ray);
+
+void				calc_wall_distance(t_player *p, t_ray *ray);
+void				calc_wall_height(t_info *cub, t_ray *ray);
+void				set_wall_tex_x(t_player *player, t_ray *ray);
+void				set_wall_tex_y(t_info *cub, t_ray *ray, int x);
 
 #endif
