@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: donghyki <42.4.donghyki@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/06 01:40:46 by donghyki          #+#    #+#             */
-/*   Updated: 2022/06/09 09:29:08 by donghyki         ###   ########.fr       */
+/*   Created: 2022/03/13 16:42:12 by donghyki          #+#    #+#             */
+/*   Updated: 2022/06/10 22:10:44 by donghyki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,23 @@ typedef struct s_ray
 
 typedef struct s_player
 {
-	double			pos_x;
-	double			pos_y;
 	double			dir_x;
 	double			dir_y;
 	double			plane_x;
 	double			plane_y;
-	double			move_speed;
+	double			pos_x;
+	double			pos_y;
 	double			rot_speed;
-	char			spawning_orientation;
+	double			move_speed;
+	char			spawn_pos;
 }					t_player;
 
 typedef struct s_element
 {
-	int				render_x;
-	int				render_y;
 	int				floor;
 	int				ceiling;
+	int				render_x;
+	int				render_y;
 	char			*xpm_path[4];
 	int				tex[4][TEX_HEIGHT * TEX_WIDTH];
 }					t_element;
@@ -126,22 +126,30 @@ typedef struct s_info
 void				init_cub(t_info *cub, char *arg);
 int					exit_game(void);
 void				read_cub_element_lines(t_info *cub);
+void				set_color_utils(t_info *cub, int type, int hex);
+int					set_elements(t_info *cub, char **word);
+int					valid_and_set_element_lines(t_info *cub,
+						char **word, int cnt_word);
+
 void				read_cub_map_lines(t_info *cub);
 int					raycast(t_info *cub);
 void				valid_element_lines(char *word, int cnt_word);
-void				valid_cub(t_info *cub);
+void				valid_map(t_info *cub);
 void				set_cub(t_info *cub);
-
+void				move_forward_backward(t_info *cub,
+						t_player *player, double move_speed);
+void				move_left_right(t_info *cub,
+						t_player *player, double move_speed);
 void				start_game(t_info *cub);
 void				rotate_player(t_player *player, double rot_speed);
 
 void				init_ray(t_info *cub, t_player *p, t_ray *ray, int x);
-void				calc_step_sidedist(t_player *p, t_ray *ray);
-void				perform_dda(t_info *cub, t_ray *ray);
+void				calc_sidedist_step(t_player *p, t_ray *ray);
+void				applicate_dda(t_info *cub, t_ray *ray);
 
-void				calc_wall_distance(t_player *p, t_ray *ray);
-void				calc_wall_height(t_info *cub, t_ray *ray);
-void				set_wall_tex_x(t_player *player, t_ray *ray);
-void				set_wall_tex_y(t_info *cub, t_ray *ray, int x);
+void				calc_distance_wall(t_player *p, t_ray *ray);
+void				calc_height_wall(t_info *cub, t_ray *ray);
+void				set_tex_x_wall(t_player *player, t_ray *ray);
+void				set_tex_y_wall(t_info *cub, t_ray *ray, int x);
 
 #endif
