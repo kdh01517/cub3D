@@ -6,7 +6,7 @@
 #    By: donghyki <42.4.donghyki@gmail.com>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/11 01:05:19 by donghyki          #+#    #+#              #
-#    Updated: 2022/06/09 06:30:29 by donghyki         ###   ########.fr        #
+#    Updated: 2022/06/19 05:31:52 by donghyki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ RM				= rm -rf
 MKDIR			= mkdir -p
 RMDIR			= rmdir
 
-SRCS_LIST		= main.c read_elements.c read_map.c valid_cub.c set_cub.c start_game.c raycast.c raycast_dda.c raycast_wall.c 
+SRCS_LIST		= main.c readElements.c readElementsUtils.c readMap.c validCub.c setMap.c handleGame.c movements.c raycasting.c raycastingDDA.c raycastingWall.c
 
 SRCS			= $(addprefix $(SRC_DIR)/, $(SRCS_LIST))
 OBJS			= $(addprefix $(OBJ_DIR)/, $(SRCS_LIST:.c=.o))
